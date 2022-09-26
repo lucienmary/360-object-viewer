@@ -2,7 +2,12 @@ $(function() {
 
     const CTX = $('#ctx');
     const GLASS = $('#glass');
-    const ASSETS_CONTAINER = $('#assets');
+    const ASSETS = {
+        container: $('#assets'),
+        nbOfAssets: $('#assets').children().length,
+        currentImg: '',
+        baseURL: 'https://lucienmary.github.io/host-img-codepen/' // Can be taken from the src.
+    };
     
     const COMMAND = {
         top: $('.arrow-top'), // useless by default.
@@ -17,11 +22,11 @@ $(function() {
     }
 
     function init(params) {
-        const FIRST_IMG = ASSETS_CONTAINER.find("img").first();
-        FIRST_IMG.addClass('display');
+        ASSETS.currentImg = ASSETS.container.find("img").first();
+        ASSETS.currentImg.addClass('display');
 
-        CTX.width = FIRST_IMG.outerWidth() * SETTINGS.zoom;
-        CTX.height = FIRST_IMG.outerHeight() * SETTINGS.zoom;
+        CTX.width = ASSETS.currentImg.outerWidth() * SETTINGS.zoom;
+        CTX.height = ASSETS.currentImg.outerHeight() * SETTINGS.zoom;
 
         CTX.css({'width' : CTX.width, 'height' : CTX.height});
         GLASS.css({'width' : CTX.width, 'height' : CTX.height});
@@ -54,12 +59,45 @@ $(function() {
     init();
 
     GLASS.on('click', (e) => {
-        move(e);
+        stateChange(e);
     });
 
-    function move(e) {
+    function stateChange(e) {
         const DIRECTION = $(e.target).data('direction');
-        console.log(DIRECTION);
+
+        var nameOfFileTab = ASSETS.currentImg[0].getAttribute('src').split('/');
+        ASSETS.currentImg.id = parseInt((nameOfFileTab[nameOfFileTab.length-1].split('.'))[0]);
+        ASSETS.currentImg.ext = (nameOfFileTab[nameOfFileTab.length-1].split('.'))[1];
+
+        if (DIRECTION == 'left' || DIRECTION == 'right') {
+            horizontalShift(DIRECTION);
+        } else {
+            verticalShift(DIRECTION);
+        }
+    }
+
+    function horizontalShift(direction) {
+        if (direction == 'right') {
+            idNextImg = ASSETS.currentImg.id < (ASSETS.nbOfAssets - 1) ? ASSETS.currentImg.id + 1 : 0;
+            selectImg(idNextImg);
+
+        } else {
+            idNextImg = ASSETS.currentImg.id > 0 ? ASSETS.currentImg.id - 1 : ASSETS.nbOfAssets - 1;
+            selectImg(idNextImg);
+        }
+    }
+
+    function verticalShift(direction) {
+        // To do later.
+    }
+
+    function selectImg(id) {
+        let nextImg = CTX.find(`img[src="${ASSETS.baseURL + id}.${ASSETS.currentImg.ext}"]`);
+
+        ASSETS.currentImg.removeClass('display');
+        ASSETS.currentImg.id = id;
+        ASSETS.currentImg = nextImg;
+        ASSETS.currentImg.addClass('display');
     }
     
 });
