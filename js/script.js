@@ -13,7 +13,9 @@ $(function() {
         top: $('.arrow-top'), // useless by default.
         right: $('.arrow-right'),
         bottom: $('.arrow-bottom'), // useless by default.
-        left: $('.arrow-left')
+        left: $('.arrow-left'),
+        rotationDelay: 150,
+        debug: false
     }
 
     const SETTINGS = {
@@ -54,13 +56,23 @@ $(function() {
                 SETTINGS.axis = 'x';
                 break;
         }
+
+        console.log(COMMAND.debug);
+        if (COMMAND.debug == true) $('.arrow').addClass('display-debug');
     }
 
     init();
 
-    GLASS.on('click', (e) => {
-        stateChange(e);
+    let mouseInterval;
+    GLASS.mousedown((e) => {
+        mouseIsDown(e);
+        mouseInterval = setInterval(mouseIsDown, COMMAND.rotationDelay, e);
+    }).mouseup(() => {
+        clearInterval(mouseInterval);
     });
+    function mouseIsDown(e) {
+        stateChange(e);
+    }
 
     function stateChange(e) {
         const DIRECTION = $(e.target).data('direction');

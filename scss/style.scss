@@ -62,10 +62,14 @@ header {
             cursor: pointer;
 
             &-left {
-                background-color: rgba($color: blue, $alpha: .333);
+                &.display-debug {
+                    background-color: rgba($color: blue, $alpha: .333);
+                }
             }
             &-right {
-                background-color: rgba($color: red, $alpha: .333);
+                &.display-debug {
+                    background-color: rgba($color: red, $alpha: .333);
+                }
             }
 
             &-y {
@@ -74,7 +78,10 @@ header {
                 left: 0;
                 width: 100%;
                 height: 50%;
-                background-color: rgba($color: orange, $alpha: .333);
+
+                &.display-debug {
+                    background-color: rgba($color: orange, $alpha: .333);
+                }
 
                 &-top-tiny {
                     left: 15%;
@@ -85,7 +92,10 @@ header {
 
             &-bottom {
                 top: 50%;
-                background-color: rgba($color: green, $alpha: .333);
+
+                &.display-debug {
+                    background-color: rgba($color: green, $alpha: .333);
+                }
 
                 &.arrow-y-bottom-tiny {
                     top: 75%;
